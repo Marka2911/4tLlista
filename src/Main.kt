@@ -8,26 +8,36 @@ import java.util.Scanner
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     val scanner = Scanner(System.`in`)
-    var ubicacioArxiu = "Fitxers/"
-    var nomArxiu = scanner.next()
-    ubicacioArxiu += nomArxiu
-    "hola"
+    var ubBase = "Fitxers/"
 
-    val llistaLlibres = llegeixArxiu(ubicacioArxiu)
-
-
+    println("Digues el nom del arxiu que vols llegir")
+    var nom = scanner.next()
+    nom = ubBase + nom
+    val llistaLlibres = llegeixArxiu(nom)
 
     println("Quina operació vols realitzar?")
-    println(" 1 - Separa strings per //")
+    println("1 - Desca el CSV")
     var opcio = scanner.nextInt()
     while (opcio != 0)
     {
         when(opcio){
+            1 -> {
+                println("Nom del arxiu on vols guardar aquest csv?")
+                var nom = scanner.next()
+                var arxiusAdesar = "Fitxers/"
+                arxiusAdesar += nom
+                FileOutputStream(nom).apply{ desaCsv(arxiusAdesar, llistaLlibres)}
+            }
         }
         opcio = scanner.nextInt()
         println("Quina operació vols realitzar?")
 
     }
+
+
+
+
+
 
 
 
@@ -80,15 +90,20 @@ fun llegeixArxiu(arxiu : String) : MutableList<Llibre>{
 fun desaCsv(arxiu: String, llistaLlibres : MutableList<Llibre>){
 
     val writer = File(arxiu).outputStream().bufferedWriter()
-    llistaLlibres.forEach{
-        writer.write(it.Titol)
-    }
 
+    llistaLlibres.forEach{
+        val persones = it.AutorPersones.toString()
+        val entitats = it.AutorEntitats.toString()
+        writer.write("${it.IdBNE}, $persones, $entitats}, ${it.Titol}, ${it.Descripcio}, ${it.Genere}, ${it.DipositLegal}, ${it.Pais}, ${it.Idioma}, ${it.VersioDigital}, ${it.VersioDigital}, ${it.TextOCR}, ${it.ISBN}, ${it.Tema}, ${it.Editorial}, ${it.LlocPublicacio}")
+        writer.newLine()
+    }
+    writer.flush()
 }
 
+
 class Llibre(
-    var IdBNE : String,
-    var AutorPersones : MutableList<String>,
+    var IdBNE : String = "",
+    var AutorPersones : MutableList<String> = mutableListOf(""),
     var AutorEntitats : MutableList<String> = mutableListOf(""),
     var Titol : String = "",
     var Descripcio : String = "",
