@@ -13,7 +13,7 @@ fun main() {
     val scanner = Scanner(System.`in`)
     var ubBase = "Fitxers/"
     try {
-        println("Digues el nom del arxiu que vols llegir")
+        println("Digues el nom del arxiu que vols llegir.")
         var nom = scanner.next()
         var location = ubBase + nom
         val llistaLlibres = llegeixArxiu(location)
