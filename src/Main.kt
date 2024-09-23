@@ -29,8 +29,8 @@ fun main() {
             println("7 - LlistaIdiomes")
             println("8 - LlistaIdioma")
             println("9 - LlistaLlibre")
-            println("9 - LlistaPos")
-            println("10 - LlistaRang")
+            println("10 - LlistaPos")
+            println("11 - LlistaRang")
             println("0 - Sortir")
             opcio = scanner.nextInt()
 
@@ -94,7 +94,21 @@ fun main() {
                     println("Digues un IdBNE i t'ensenyem quin llibre coincideix si es que hi ha algun")
                     val scanner = Scanner(System.`in`)
                     val input = scanner.next()
-                    llistaLlibre(input, llistaLlibres)
+                    llistaIdBNE(input, llistaLlibres)
+                }
+                10->{
+                    println("Digues una posicio i t'enseyem quin llibre coincideix si hi ha algun")
+                    val scanner = Scanner(System.`in`)
+                    val input = scanner.nextInt()
+                    llistaIndex(input, llistaLlibres)
+                }
+                11->{
+                    println("Digues 1 num")
+                    val scanner = Scanner(System.`in`)
+                    val num01 = scanner.nextInt()
+                    println("Digues 1 altre num")
+                    val num02 = scanner.nextInt()
+                    llistaRangs(num01, num02, llistaLlibres)
                 }
                 0 -> println("Sortint del programa...")
                 else -> println("Opció no vàlida")
@@ -106,7 +120,33 @@ fun main() {
     }
 }
 
-fun llistaLlibre(input: String?, llistaLlibres: MutableList<Llibre>) {
+fun llistaRangs(num01: Int, num02: Int, llistaLlibres: MutableList<Llibre>) {
+    if (num01 >= 0 && num02 < llistaLlibres.size && num01 <= num02) {
+        val subllista = llistaLlibres.subList(num01, num02 + 1)
+        if (subllista.isEmpty()) {
+            println("No hi ha llibres entre aquestes posicions.")
+        } else {
+            println("Llistant llibres entre les posicions $num01 i $num02:")
+            subllista.forEach { llibre ->
+                println(toStringDeLlibre(llibre))
+            }
+        }
+    } else {
+        println("Les posicions introduïdes no són vàlides.")
+    }
+}
+
+fun llistaIndex(input: Int, llistaLlibres: MutableList<Llibre>) {
+    // Comprovem si l'índex està dins del rang vàlid
+    if (input in 0 until llistaLlibres.size) {
+        val llibreAct = llistaLlibres[input]
+        println(toStringDeLlibre(llibreAct))
+    } else {
+        println("No hi ha cap llibre en aquesta posició.")
+    }
+}
+
+fun llistaIdBNE(input: String?, llistaLlibres: MutableList<Llibre>) {
 
     var trobat = false
     var i = 1
