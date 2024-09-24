@@ -32,8 +32,11 @@ fun main() {
             println("10 - LlistaPos")
             println("11 - LlistaRang")
             println("0 - Sortir")
+            while (!scanner.hasNextInt()) {
+                scanner.next()
+                println("Opció no vàlida, torna a provar.")
+            }
             opcio = scanner.nextInt()
-
             when (opcio) {
                 1 -> {
                     println("Nom del arxiu on vols guardar aquest csv?")
@@ -44,8 +47,12 @@ fun main() {
                 }
                 2->{
                     val llibre = ompleLlibre(llistaLlibres)
-                    println("S'ha afegit el llibre - ")
-                    println(toStringDeLlibre(llibre))
+                    if (llibre.IdBNE != "") {
+                        println("S'ha afegit el llibre - ")
+                        println(toStringDeLlibre(llibre))
+                    }
+                    else
+                        println("No s'ha afegit el llibre")
                 }
                 3->{
                     val scanner = Scanner(System.`in`)
@@ -56,6 +63,11 @@ fun main() {
                 4->{
                     val scanner = Scanner(System.`in`)
                     println("Digues la posicio del llibre que vulguis eliminar")
+                    while (!scanner.hasNextInt()){
+                        scanner.next()
+                        println("El input no esta en un bon format")
+                        println("Torna a provar-ho (te que se un nombre enter)")
+                    }
                     val input = scanner.nextInt()
                     eliminaPos(input, llistaLlibres)
                 }
@@ -222,10 +234,13 @@ fun diferentsPaisos(llistaLlibres: MutableList<Llibre>) : MutableList<String>{
 }
 
 fun llistaPais(pais: String, llistaLlibres: MutableList<Llibre>) {
-    var llistaLlibresPerPais = diferentsPaisos(llistaLlibres)
+
     println("Llista de llibres fets al pais $pais\n")
-    if (llistaLlibresPerPais.isEmpty())
-        println("No hi ha ningun llibre per el pais $pais, o has fet un input erroni")
+    var llistaLlibresPerPais = diferentsPaisos(llistaLlibres)
+    if (!llistaLlibresPerPais.contains(pais))
+        println("No hi ha ningun pais amb el nom de $pais, o has fet un input erroni")
+    else if (llistaLlibresPerPais.isEmpty())
+        println("No hi ha ningun llibre fet en el pais $pais")
     else {
         llistaLlibresPerPais.forEach {
             println(it)
@@ -301,10 +316,17 @@ fun toStringDeLlibre(llibre: Llibre) : String{
 
 fun ompleLlibre(llistaLlibres: MutableList<Llibre>) : Llibre {
     val scanner = Scanner(System.`in`)
-    println("Estigues atent tens que escriure el llibre que vols entrar amb una separació de ';' per camps")
+    var retornar = Llibre()
+    println("Estigues atent tens que escriure el llibre que vols entrar amb una separació de ';' per camps i TENEN que haveri 14 camps")
     println("IdBNE, AUTOR PERSONES (En cas de varies separa cada persona per // ), AUTOR ENTITATS (En cas de varies separa cada persona per // ), TITOL, DESCRIPCIO, GENERE, DPOSITLEGAL, PAIS, IDIOMA, VERSIODIGITAL, TEXTOCR, ISBN, TEMA, EDITORIAL, LLOCPUBLICAICO")
     val frase = scanner.nextLine()
-    return altaLlibre(frase, llistaLlibres)
+    var fraseSplit = frase.split(';')
+    if (fraseSplit.size != 15) {
+        println("La frase que has entrat no te 15 camps, no es pot fer la conversio")
+    }
+    else
+        retornar = altaLlibre(frase, llistaLlibres)
+    return  retornar
 }
 
 fun altaLlibre(frase: String, llistaLlibres: MutableList<Llibre>) : Llibre{
@@ -341,9 +363,10 @@ fun separaString(frase : String) : MutableList<String>{
 
 fun converteixALlibre(linea : String) : Llibre{
     val campsGenerals = linea.split(";")
-    val llistaNoms = separaString(campsGenerals[1])
-    val llistaEntitats = separaString(campsGenerals[2])
-    val llibre = Llibre(campsGenerals[0], llistaNoms, llistaEntitats, campsGenerals[3],
+    var llibre = Llibre()
+        val llistaNoms = separaString(campsGenerals[1])
+        val llistaEntitats = separaString(campsGenerals[2])
+        llibre = Llibre(campsGenerals[0], llistaNoms, llistaEntitats, campsGenerals[3],
         campsGenerals[4],
         campsGenerals[5],
         campsGenerals[6],
@@ -356,7 +379,6 @@ fun converteixALlibre(linea : String) : Llibre{
         campsGenerals[13],
         campsGenerals[14],
     )
-
     return  llibre
 }
 
